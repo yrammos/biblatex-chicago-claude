@@ -1,0 +1,49 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Purpose
+
+This repository contains academic PDF publications. The task is to extract bibliographic information from PDFs in the `./pdf` fodler and store it in a BibLaTeX file using the **biblatex-chicago** standard (notes and bibliography variant, not author-date).
+
+## Bibliographic Extraction Guidelines
+
+- Look for PDFs in the `/.pdf` folder
+- **Read only** the beginning (max of first page or ~450 words) and last ~150 words of each PDF for bibliographic data
+- IMPORTANT: Use `biblio-template.bib` as reference for publication types and fields. Try to use the types and fields in this template.
+- Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields
+- Save the BibLaTeX-Chicago output in a `./biblio-ai.bib` file
+- Do not populate the following fields:
+  - ISSN
+  - ISBN
+  - keywords
+  - reference
+  - devonthink
+  - URL (in @article, @book, @collection, @incollection, @inbook types).
+- Use a single hyphen (`-`) for page ranges, date ranges, and any other ranges
+- If the main language of the publication is English, the following fields should appear in title case (according to Chicago Manual of Style sense of "title case"):
+  - Title
+  - Journaltitle
+  - Booktitle
+  - Issuetitle
+  - Publisher
+- If the language of the publication is Russian or French, use title case.
+- If the language of the publication is German, use German title case.
+- Do not use all caps, unless it is a single, individual word in the title.
+- All proper-name fields should be in "LastName, FirstName\~Initials" format, e.g. "Smith, John~A."
+- If any individual words or subphrases within the title appear in quotation marks, enclose them in \mkbibquote{} instead of using quotation marks. For example, if the title of the book is: `From 'Here' to 'There'` encode that as `From \mkbibquote{Here} to \mkbibquote{There}`
+- For foreign-language text in any fields, use `\foreignlanguage{<language name>}{<text>}`. See examples in the template file.
+- Use the `Shorttitle` field if the full title is more than six words long and includes a colon or full stop. In those cases, the `Shorttitle` is the first part of the full title (i.e. up to the colon or full stop).
+- Conference papers are considered `@Unpublished`. For those items, the `Note` field is used with the following content: `\autocap{p}aper presented at <Conference Name>`, for example: `\autocap{p}aper presented at the 9th Meeting of the Russian Society for Music Theory`.
+- For more details on available fields and their use, see the reference sources below.
+
+## Reference Documentation
+
+- biblatex-chicago package: https://ctan.org/tex-archive/macros/latex/contrib/biblatex-contrib/biblatex-chicago
+- Types and fields reference: https://mirrors.ctan.org/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/biblatex-chicago.pdf
+- Examples: https://mirror.init7.net/ctan/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/cms-notes-intro.pdf
+
+## Important Notes
+
+- Use biblatex-chicago specific types and fields, not generic BibLaTeX
+- The Chicago style variant is "notes and bibliography", not "author-date"
