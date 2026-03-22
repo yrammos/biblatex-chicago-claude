@@ -385,8 +385,8 @@ end tell'''
         return "eng"
 
     def notify_progress(self, message, subtitle=""):
-        """Send a macOS notification for progress updates (when notify_progress is enabled)."""
-        if not self.config.get('notify_progress', False):
+        """Send a macOS notification for progress updates (when notifications are enabled)."""
+        if not self.config.get('notifications', True):
             return
         script = f'display notification "{message}" with title "Ostracon AI"'
         if subtitle:
@@ -395,6 +395,8 @@ end tell'''
 
     def notify_failure(self, pdf_name, error_msg):
         """Send a macOS notification about a validation failure."""
+        if not self.config.get('notifications', True):
+            return
         failed_path = Path(self.config.get('failed_bib_file', '~/Desktop/biblio-failed.bib')).expanduser()
         msg = f"Brace validation failed for {pdf_name}: {error_msg}. Entry saved to {failed_path}."
         subprocess.run(
@@ -402,6 +404,29 @@ end tell'''
              f'display notification "{msg}" with title "Ostracon AI" subtitle "Validation Failed" sound name "Basso"'],
             capture_output=True
         )
+
+    def _save_bibdesk_document(self):
+        """Save the BibDesk document for main_bib_file if it is currently open."""
+        bib_path = str(Path(self.config['main_bib_file']).expanduser().resolve())
+        script = f'''
+tell application "BibDesk"
+    repeat with d in documents
+        if path of d is "{bib_path}" then
+            save d
+            return "ok"
+        end if
+    end repeat
+    return "not open"
+end tell'''
+        try:
+            result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True, text=True, timeout=15
+            )
+            if result.stdout.strip() == "ok":
+                self._log("   ✓ Staging file saved", 'success')
+        except Exception as e:
+            self._log(f"   ⚠️  Could not save BibDesk document: {e}", 'warning')
 
     def save_failure(self, entry, pdf_name, error_msg):
         """Append a failed entry with an error note to the failed bib file."""
@@ -514,6 +539,9 @@ end tell'''
         self._log(f"\n📚 Processing {total} PDF(s)\n", 'info')
         self.notify_progress(f"Processing {total} file{'s' if total != 1 else ''}…")
 
+        if self.config.get('autofile_bibdesk', False):
+            self._save_bibdesk_document()
+
         results = {'success': [], 'failed': [], 'skipped': []}
 
         for i, pdf_path in enumerate(files, 1):
@@ -561,6 +589,9 @@ end tell'''
             self._log("\nFailed files:", 'error')
             for name, error in results['failed']:
                 self._log(f"  - {name}: {error}", 'error')
+
+        if self.config.get('autofile_bibdesk', False):
+            self._save_bibdesk_document()
 
         if n_fail:
             summary_msg = f"{n_ok} succeeded, {n_fail} failed"
