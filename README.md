@@ -12,7 +12,7 @@ In either case, this tool aims to enhance BibDesk-based workflows with Zotero-li
 
 Using alternative styles (e.g., APA) involves only minor modifications to the prompts and context and is left as a trivial exercise for the reader.
 
-## What It Does
+## What it does
 
 1. Takes one or more PDF files as input.
 2. Extracts text from the first page (~450 words) and last ~150 words.
@@ -20,8 +20,8 @@ Using alternative styles (e.g., APA) involves only minor modifications to the pr
 4. Sends the extracted text to the Claude API with project guidelines and a reference template.
 5. Returns a properly formatted BibLaTeX-Chicago entry.
 6. Validates brace balance before saving.
-7. Saves the entry — with a BibDesk `bdsk-file-1` bookmark — either directly into BibDesk (if `autofile_bibdesk` is enabled) or to a staging file (`~/Desktop/biblio-staging.bib`).
-8. On validation failure, saves the raw entry to `~/Desktop/biblio-failed.bib` and sends a macOS notification.
+7. Saves the entry — with a BibDesk `bdsk-file-1` bookmark — either directly into BibDesk (if `autofile_bibdesk` is enabled) or to the staging file (`main_bib_file` in `config.yaml`).
+8. On validation failure, saves the raw entry to `failed_bib_file` and sends a macOS notification.
 
 With `autofile_bibdesk` disabled, the staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
 
@@ -29,14 +29,14 @@ With `autofile_bibdesk` disabled, the staging file can be periodically imported 
 
 ## Setup
 
-### 1. Install System Dependencies
+### 1. Install system dependencies
 
 ```bash
 # OCR support (optional but recommended for scanned PDFs)
 brew install ocrmypdf
 ```
 
-### 2. Create a Python Environment and Install Dependencies
+### 2. Create a Python environment and install dependencies
 
 ```bash
 conda create -n biblio-ai python=3.11   # or use venv
@@ -58,11 +58,12 @@ Edit `config.yaml`:
 ```yaml
 anthropic_api_key: "sk-ant-..." # your Anthropic API key
 main_bib_file: "~/Desktop/biblio-staging.bib" # staging output
+failed_bib_file: "~/Desktop/biblio-failed.bib" # validation failures
 ```
 
 The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left untouched or adjusted to your setup. The optional `ref_file` key (set to `biblatex-chicago-notes-ref.md` by default) loads a condensed biblatex-chicago field reference into the Claude prompt to improve extraction quality; remove or comment it out to omit it.
 
-### 4. Customize the Extraction Prompt
+### 4. Customize the extraction prompt
 
 Edit `CLAUDE.md` to match your bibliographic conventions. At minimum, review:
 
@@ -72,7 +73,7 @@ Edit `CLAUDE.md` to match your bibliographic conventions. At minimum, review:
 
 The richer and more specific your `CLAUDE.md`, the more accurately Claude will format entries to your standards.
 
-### 5. Configure the Automator Script
+### 5. Configure the Automator script
 
 ```bash
 cp automator/script.sh.example automator/script.sh
@@ -80,7 +81,7 @@ cp automator/script.sh.example automator/script.sh
 
 Edit `automator/script.sh` and set `PYTHON` to the path of your Python executable and `WORKDIR` to the absolute path of this repository. This file is excluded from version control.
 
-### 6. Install the macOS Quick Action
+### 6. Install the macOS quick action
 
 ```bash
 python3 install_service.py
@@ -90,7 +91,7 @@ This builds the Automator workflow from `automator/script.sh` and installs it to
 
 ## Usage
 
-### macOS Quick Action (recommended)
+### macOS quick action (recommended)
 
 Right-click any PDF (or selection of PDFs) in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. The entry is appended to the staging file and copied to the clipboard.
 
@@ -100,7 +101,7 @@ See [Setup](#5-configure-the-automator-script) for initial configuration. To rei
 python3 install_service.py
 ```
 
-### Command Line
+### Command line
 
 ```bash
 # Process one or more PDFs
@@ -116,7 +117,7 @@ python biblio_agent.py --all
 python biblio_agent.py path/to/paper.pdf --output custom.bib
 ```
 
-## File Structure
+## File structure
 
 ```
 ostracon-ai/
@@ -135,15 +136,15 @@ ostracon-ai/
 └── pdf-out/              # Processed PDFs are moved here
 ```
 
-## BibDesk Integration
+## BibDesk integration
 
-By default the tool writes to `~/Desktop/biblio-staging.bib`, which you import into BibDesk manually. Each entry includes a `bdsk-file-1` bookmark so PDF links resolve correctly after import.
+By default the tool writes to the file set in `main_bib_file` (`config.yaml`), which you import into BibDesk manually. Each entry includes a `bdsk-file-1` bookmark so PDF links resolve correctly after import.
 
 Set `autofile_bibdesk: true` in `config.yaml` to skip the staging file entirely. The tool will import each entry directly into BibDesk via AppleScript (opening the staging file in BibDesk if it is not already open) and immediately trigger BibDesk's auto-file to move the PDF to your papers folder.
 
 ## Troubleshooting
 
-**Entry saved to `~/Desktop/biblio-failed.bib` instead of staging file**
+**Entry saved to `failed_bib_file` instead of staging file**
 The generated entry had unbalanced braces. Open the failed file, fix the entry manually, and add it to the staging file.
 
 **`bdsk-file-1` bookmark not working after import**
@@ -155,7 +156,7 @@ Run `python3 install_service.py` and check System Settings → General → Login
 **OCR not working**
 Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extraction if OCR is unavailable. When a scanned PDF is detected, a language selection dialog will appear — pick the language of the document so Tesseract uses the correct model. In quiet/automation mode, the language defaults to `eng`; set `default_ocr_language` in `config.yaml` to override (e.g. `rus`, `deu`, `fra`).
 
-## Cost Estimate
+## Cost estimate
 
 Using Claude Sonnet:
 

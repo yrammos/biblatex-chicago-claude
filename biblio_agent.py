@@ -395,7 +395,8 @@ end tell'''
 
     def notify_failure(self, pdf_name, error_msg):
         """Send a macOS notification about a validation failure."""
-        msg = f"Brace validation failed for {pdf_name}: {error_msg}. Entry saved to ~/Desktop/biblio-failed.bib."
+        failed_path = Path(self.config.get('failed_bib_file', '~/Desktop/biblio-failed.bib')).expanduser()
+        msg = f"Brace validation failed for {pdf_name}: {error_msg}. Entry saved to {failed_path}."
         subprocess.run(
             ['osascript', '-e',
              f'display notification "{msg}" with title "Ostracon AI" subtitle "Validation Failed" sound name "Basso"'],
@@ -403,8 +404,8 @@ end tell'''
         )
 
     def save_failure(self, entry, pdf_name, error_msg):
-        """Append a failed entry with an error note to ~/Desktop/biblio-failed.bib."""
-        failed_path = Path.home() / 'Desktop' / 'biblio-failed.bib'
+        """Append a failed entry with an error note to the failed bib file."""
+        failed_path = Path(self.config.get('failed_bib_file', '~/Desktop/biblio-failed.bib')).expanduser()
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with open(failed_path, 'a') as f:
             f.write(f"% FAILED: {timestamp}\n")

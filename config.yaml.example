@@ -10,6 +10,7 @@ anthropic_api_key: "sk-ant-api03-REPLACE_WITH_YOUR_KEY"
 pdf_in_folder: "./pdf-in" # Incoming PDFs to process
 pdf_out_folder: "./pdf-out" # Processed PDFs moved here
 main_bib_file: "~/Desktop/biblio-staging.bib"
+failed_bib_file: "~/Desktop/biblio-failed.bib"
 template_file: "./biblio-template.bib"
 claude_md_file: "./CLAUDE.md"
 ref_file: "./biblatex-chicago-notes-ref.md"  # Optional: condensed biblatex-chicago field reference
