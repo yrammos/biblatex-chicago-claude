@@ -7,11 +7,12 @@ A Claude-powered macOS tool for extracting bibliographic information from academ
 ```bash
 brew install ocrmypdf                   # OCR support (optional)
 pip install -r requirements.txt         # Python dependencies
-cp automator/script.sh.example automator/script.sh  # then edit PYTHON and WORKDIR within that file
+cp config.yaml.example config.yaml     # then set anthropic_api_key within
+cp automator/script.sh.example automator/script.sh  # then edit PYTHON and WORKDIR within
 python3 install_service.py              # install the Finder quick action (optional, recommended)
 ```
 
-Set `anthropic_api_key` in `config.yaml`, then right-click any PDF in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. See [Setup](#setup) for full configuration details.
+Then right-click any PDF in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. See [Setup](#setup) for full configuration details.
 
 ## Rationale
 
