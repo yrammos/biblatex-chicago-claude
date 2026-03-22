@@ -49,13 +49,39 @@ main_bib_file: "~/Desktop/biblio-staging.bib"  # staging output
 
 The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left as-is or adjusted to your setup.
 
+### 4. Customize the Extraction Prompt
+
+Edit `CLAUDE.md` to match your bibliographic conventions. At minimum, review:
+
+- The output format and field exclusions (e.g. which fields to omit)
+- Title-case rules for any languages you work with
+- Any domain-specific entry types or fields you rely on
+
+The richer and more specific your `CLAUDE.md`, the more accurately Claude will format entries to your standards.
+
+### 5. Configure the Automator Script
+
+```bash
+cp automator/script.sh.example automator/script.sh
+```
+
+Edit `automator/script.sh` and set `PYTHON` to the path of your Python executable and `WORKDIR` to the absolute path of this repository. This file is excluded from version control.
+
+### 6. Install the macOS Quick Action
+
+```bash
+python3 install_service.py
+```
+
+This builds the Automator workflow from `automator/script.sh` and installs it to `~/Library/Services/`. Re-run it any time you modify `script.sh`.
+
 ## Usage
 
 ### macOS Quick Action (recommended)
 
 Right-click any PDF (or selection of PDFs) in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. The entry is appended to the staging file and copied to the clipboard.
 
-To install or reinstall the Quick Action after changes to `automator/script.sh`:
+See [Setup](#5-configure-the-automator-script) for initial configuration. To reinstall after changes to `automator/script.sh`:
 
 ```bash
 python3 install_service.py
@@ -89,7 +115,8 @@ ostracon-ai/
 ├── CLAUDE.md             # Bibliographic extraction guidelines for Claude
 ├── biblio-template.bib   # Reference template for BibLaTeX-Chicago types/fields
 ├── automator/
-│   └── script.sh         # Shell script embedded in the Quick Action
+│   ├── script.sh.example # Shell script template (copy to script.sh and edit)
+│   └── script.sh         # Your local script (gitignored — machine-specific paths)
 ├── pdf-in/               # Drop PDFs here for batch processing (--all)
 └── pdf-out/              # Processed PDFs are moved here
 ```
