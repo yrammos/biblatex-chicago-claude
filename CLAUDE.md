@@ -12,6 +12,7 @@ This repository contains academic PDF publications. The task is to extract bibli
 - **Read only** the beginning (max of first page or ~450 words) and last ~150 words of each PDF for bibliographic data.
 - IMPORTANT: Use `biblio-template.bib` as reference for publication types and fields. Try to use the types and fields in this template.
 - Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields.
+- Every new entry must include `date-added` and `date-modified` fields, both set to the current date, time, and timezone. Run `date "+%Y-%m-%d %H:%M:%S %z"` to get the value. Format: `date-added = {2026-03-22 14:30:00 +0200}`.
 - Do not populate the following fields:
   - ISSN
   - ISBN
