@@ -13,19 +13,19 @@ This repository contains academic PDF publications. The task is to extract bibli
 - IMPORTANT: Use `biblio-template.bib` as reference for publication types and fields. Try to use the types and fields in this template.
 - Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields.
 - Do not populate the following fields:
-  - ISSN.
-  - ISBN.
-  - keywords.
-  - reference.
-  - devonthink.
-  - URL (in @article, @book, @collection, @incollection, @inbook types).
+  - ISSN
+  - ISBN
+  - keywords
+  - reference
+  - devonthink
+  - URL (in @article, @book, @collection, @incollection, @inbook types)
 - Use a single hyphen (`-`) for page ranges, date ranges, and any other ranges.
 - If the main language of the publication is English, the following fields should appear in title case (according to Chicago Manual of Style sense of "title case"):
-  - Title.
-  - Journaltitle.
-  - Booktitle.
-  - Issuetitle.
-  - Publisher.
+  - Title
+  - Journaltitle
+  - Booktitle
+  - Issuetitle
+  - Publisher
 - If the language of the publication is Russian or French, use title case.
 - If the language of the publication is German, use German title case.
 - Do not use all caps, unless it is a single, individual word in the title.

@@ -48,6 +48,7 @@ python biblio_agent.py pdf/your-test-file.pdf
 ```
 
 You should see:
+
 - Processing messages.
 - The extracted BibLaTeX entry printed to console.
 - Entry appended to the file set in `main_bib_file` (your `config.yaml`).
@@ -55,6 +56,7 @@ You should see:
 ## Step 7: Review the Output
 
 Open the file set in `main_bib_file` and check:
+
 - Is the entry type correct? (@Book, @Article, etc.)
 - Are the fields properly populated?
 - Is the formatting correct?
@@ -62,16 +64,16 @@ Open the file set in `main_bib_file` and check:
 ## Troubleshooting Quick Fixes
 
 **"anthropic_api_key not found"**
-→ Edit config.yaml with your real API key
+Edit config.yaml with your real API key
 
 **"CLAUDE.md not found"**
-→ Copy your existing CLAUDE.md file to this directory
+Copy your existing CLAUDE.md file to this directory
 
 **"No module named 'anthropic'"**
-→ Run: `pip install -r requirements.txt`
+Run: `pip install -r requirements.txt`
 
 **"ocrmypdf not installed"**
-→ Only needed for scanned PDFs. Run: `brew install ocrmypdf`
+Only needed for scanned PDFs. Run: `brew install ocrmypdf`
 
 ## What's in Each File?
 

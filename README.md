@@ -1,6 +1,6 @@
-# Ostracon AI
+# bibdesk-claude
 
-A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries (notes and bibliography style).
+A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries (notes and bibliography style). Chicago is the bibliography style typically used in the humanities. In the present implementation, we apply the notes-and-bibliography variant, which is more common in music theory. Using alternative styles (e.g. APA) involves trivial modifications to the prompts and context, and is left as an exercise to the reader.
 
 ## What It Does
 
@@ -33,6 +33,7 @@ pip install -r requirements.txt
 ```
 
 `requirements.txt` includes:
+
 - `anthropic` — Claude API client.
 - `pypdf` — PDF text extraction.
 - `pyyaml` — configuration.
@@ -43,8 +44,8 @@ pip install -r requirements.txt
 Edit `config.yaml`:
 
 ```yaml
-anthropic_api_key: "sk-ant-..."          # your Anthropic API key
-main_bib_file: "~/Desktop/biblio-staging.bib"  # staging output
+anthropic_api_key: "sk-ant-..." # your Anthropic API key
+main_bib_file: "~/Desktop/biblio-staging.bib" # staging output
 ```
 
 The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left as-is or adjusted to your setup.
@@ -142,6 +143,7 @@ Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extracti
 ## Cost Estimate
 
 Using Claude Sonnet:
+
 - ~$0.02 per PDF.
 
 ## License
