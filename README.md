@@ -25,6 +25,8 @@ Using alternative styles (e.g., APA) involves only minor modifications to the pr
 
 With `autofile_bibdesk` disabled, the staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
 
+![Progress window](screenshot.png)
+
 ## Setup
 
 ### 1. Install System Dependencies
