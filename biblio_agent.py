@@ -309,6 +309,57 @@ Output ONLY the BibLaTeX entry, with no additional commentary or explanation."""
             self._log("   ⚠️  pyobjc not available, skipping bdsk-file-1", 'warning')
             return entry
 
+    def _save_via_bibdesk(self, entry, bib_path):
+        """Open the staging file in BibDesk (if needed), import the entry, and auto-file it.
+
+        Uses a temp file for the import to avoid AppleScript quoting issues.
+        Raises RuntimeError on failure so the caller can log and fall through.
+        """
+        import tempfile
+        import os
+
+        with tempfile.NamedTemporaryFile(
+            mode='w', suffix='.bib', delete=False, encoding='utf-8'
+        ) as tmp:
+            tmp.write(entry)
+            tmp_path = tmp.name
+
+        script = f'''
+tell application "BibDesk"
+    set bibPath to "{bib_path}"
+    set theDoc to missing value
+    repeat with d in documents
+        if path of d is bibPath then
+            set theDoc to d
+            exit repeat
+        end if
+    end repeat
+    if theDoc is missing value then
+        set theDoc to (open POSIX file bibPath)
+    end if
+    set thePubs to import theDoc from POSIX file "{tmp_path}"
+    if thePubs is missing value or (count of thePubs) is 0 then return "import failed"
+    auto file item 1 of thePubs
+    return "ok"
+end tell'''
+
+        try:
+            result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True, text=True, timeout=30
+            )
+            output = result.stdout.strip()
+            if output == "ok":
+                self._log("   ✓ Imported into BibDesk and auto-filed", 'success')
+            else:
+                raise RuntimeError(output or result.stderr.strip())
+        except RuntimeError:
+            raise
+        except Exception as e:
+            raise RuntimeError(e)
+        finally:
+            os.unlink(tmp_path)
+
     def _ask_ocr_language(self, pdf_name=""):
         """Show a macOS dropdown to select the OCR language. Returns a tesseract language code."""
         display_names = [name for name, _ in OCR_LANGUAGES]
@@ -384,6 +435,15 @@ Output ONLY the BibLaTeX entry, with no additional commentary or explanation."""
 
         # Attach a BibDesk file bookmark
         entry = self.add_bdsk_bookmark(entry, pdf_path)
+
+        if self.config.get('autofile_bibdesk', False):
+            bib_path = str(Path(self.config['main_bib_file']).expanduser().resolve())
+            try:
+                self._save_via_bibdesk(entry, bib_path)
+                return True
+            except RuntimeError as e:
+                self._log(f"   ⚠️  BibDesk import failed: {e}", 'warning')
+                return False
 
         output_path = Path(self.config['main_bib_file']).expanduser()
         if not output_path.exists():

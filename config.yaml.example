@@ -24,3 +24,7 @@ default_ocr_language: "eng"  # Tesseract language code used in quiet/automation 
 verbose: true
 notify_progress: false  # Send macOS notifications for batch progress (useful when running via Quick Action)
 show_window: false  # Show floating progress window (overridden by --window / --no-window flags)
+
+# BibDesk integration
+autofile_bibdesk: false  # After saving each entry, import it into BibDesk and auto-file the linked PDF.
+                         # BibDesk will be launched and the bib file opened automatically if needed.
