@@ -50,11 +50,11 @@ python biblio_agent.py pdf/your-test-file.pdf
 You should see:
 - Processing messages
 - The extracted BibLaTeX entry printed to console
-- Entry saved to `biblio-ai.bib`
+- Entry appended to the file set in `main_bib_file` (your `config.yaml`)
 
 ## Step 7: Review the Output
 
-Open `biblio-ai.bib` and check:
+Open the file set in `main_bib_file` and check:
 - Is the entry type correct? (@Book, @Article, etc.)
 - Are the fields properly populated?
 - Is the formatting correct?

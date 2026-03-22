@@ -12,7 +12,6 @@ This repository contains academic PDF publications. The task is to extract bibli
 - **Read only** the beginning (max of first page or ~450 words) and last ~150 words of each PDF for bibliographic data
 - IMPORTANT: Use `biblio-template.bib` as reference for publication types and fields. Try to use the types and fields in this template.
 - Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields
-- Save the BibLaTeX-Chicago output in a `./biblio-ai.bib` file
 - Do not populate the following fields:
   - ISSN
   - ISBN
