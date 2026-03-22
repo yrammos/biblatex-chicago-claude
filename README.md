@@ -162,7 +162,7 @@ Using Claude Sonnet:
 
 - ~$0.02–$0.03 per PDF.
 
-# “Ostracon”?
+## “Ostracon”?
 
 > An ostracon (Greek: ὄστρακον ostrakon, plural ὄστρακα ostraka) is a piece of pottery (or stone), usually broken off from a vase or other earthenware vessel. In archaeology, ostraca may contain scratched-in words or other forms of writing which may give clues as to the time when the piece was in use.
 
