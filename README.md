@@ -48,7 +48,7 @@ anthropic_api_key: "sk-ant-..." # your Anthropic API key
 main_bib_file: "~/Desktop/biblio-staging.bib" # staging output
 ```
 
-The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left as-is or adjusted to your setup.
+The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left untouched or adjusted to your setup. The optional `ref_file` key (set to `biblatex-chicago-notes-ref.md` by default) loads a condensed biblatex-chicago field reference into the Claude prompt to improve extraction quality; remove or comment it out to omit it.
 
 ### 4. Customize the Extraction Prompt
 
@@ -115,6 +115,7 @@ ostracon-ai/
 ├── requirements.txt      # Python dependencies
 ├── CLAUDE.md             # Bibliographic extraction guidelines for Claude
 ├── biblio-template.bib   # Reference template for BibLaTeX-Chicago types/fields
+├── biblatex-chicago-notes-ref.md  # Condensed biblatex-chicago field reference (sent to Claude)
 ├── automator/
 │   ├── script.sh.example # Shell script template (copy to script.sh and edit)
 │   └── script.sh         # Your local script (gitignored — machine-specific paths)

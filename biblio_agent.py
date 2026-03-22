@@ -43,7 +43,7 @@ class BiblioAgent:
         return config
     
     def load_context_files(self):
-        """Load CLAUDE.md and biblio-template.bib for context."""
+        """Load CLAUDE.md, biblio-template.bib, and optional ref file for context."""
         context = {}
         verbose = self.config.get('verbose', True)
 
@@ -66,6 +66,17 @@ class BiblioAgent:
             if verbose:
                 print(f"⚠️  Warning: {template_path} not found", file=sys.stderr)
             context['template'] = ""
+
+        # Load optional reference file (e.g. biblatex-chicago-notes-ref.md)
+        ref_file = self.config.get('ref_file')
+        context['ref'] = ""
+        if ref_file:
+            ref_path = Path(ref_file)
+            if ref_path.exists():
+                with open(ref_path) as f:
+                    context['ref'] = f.read()
+            elif verbose:
+                print(f"⚠️  Warning: ref_file {ref_path} not found", file=sys.stderr)
 
         return context
     
@@ -98,7 +109,16 @@ Here is the extracted text from the first 2 pages and last page of the PDF:
 </reference_template>
 
 """
-        
+
+        if context['ref']:
+            prompt += f"""Here is a condensed reference for biblatex-chicago entry types and fields (notes and bibliography variant):
+
+<biblatex_chicago_reference>
+{context['ref']}
+</biblatex_chicago_reference>
+
+"""
+
         prompt += """Please:
 1. Identify the publication type (@Book, @Article, @InCollection, etc.)
 2. Extract all relevant bibliographic fields

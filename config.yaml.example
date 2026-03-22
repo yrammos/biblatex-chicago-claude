@@ -12,6 +12,7 @@ pdf_out_folder: "./pdf-out" # Processed PDFs moved here
 main_bib_file: "~/Desktop/biblio-staging.bib"
 template_file: "./biblio-template.bib"
 claude_md_file: "./CLAUDE.md"
+ref_file: "./biblatex-chicago-notes-ref.md"  # Optional: condensed biblatex-chicago field reference
 
 # Processing options
 ocr_threshold: 50 # Minimum characters to consider a page as having text
