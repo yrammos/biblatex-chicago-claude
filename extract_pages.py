@@ -12,31 +12,43 @@ from pathlib import Path
 from pypdf import PdfReader
 
 
-def run_ocr(pdf_path, pages=None):
+def run_ocr(pdf_path, pages=None, language="eng"):
     """
     Run ocrmypdf on the file.
 
     Args:
         pdf_path: Path to PDF
         pages: Optional page specification (e.g., "1-3,98-100")
+        language: Tesseract language code (e.g., "eng", "rus", "deu")
 
     Returns:
         True on success, error string on failure
     """
-    if not shutil.which("ocrmypdf"):
+    ocrmypdf_bin = shutil.which("ocrmypdf") or next(
+        (p for p in ["/opt/homebrew/bin/ocrmypdf", "/usr/local/bin/ocrmypdf"] if Path(p).exists()),
+        None
+    )
+    if not ocrmypdf_bin:
         return "Error: ocrmypdf not installed. Install with: brew install ocrmypdf"
 
     try:
-        cmd = ["ocrmypdf", "--skip-text"]
+        cmd = [ocrmypdf_bin, "--skip-text", "-l", language or "eng"]
         if pages:
             cmd.extend(["--pages", pages])
         cmd.extend([str(pdf_path), str(pdf_path)])
+
+        import os
+        env = os.environ.copy()
+        for brew_bin in ["/opt/homebrew/bin", "/usr/local/bin"]:
+            if brew_bin not in env.get("PATH", ""):
+                env["PATH"] = brew_bin + ":" + env.get("PATH", "")
 
         subprocess.run(
             cmd,
             check=True,
             capture_output=True,
-            timeout=120
+            timeout=120,
+            env=env,
         )
         return True
     except subprocess.TimeoutExpired:
@@ -121,7 +133,7 @@ def snap_to_sentence_end(text, target_word_count, from_end=False):
         return subset_text
 
 
-def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_threshold=100, quiet=False):
+def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_threshold=100, quiet=False, language_prompt_fn=None):
     """
     Extract beginning and end of PDF for bibliographic extraction.
 
@@ -134,6 +146,8 @@ def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_thr
         last_words: Number of words to extract from end
         min_words_threshold: If total words below this, attempt OCR
         quiet: Suppress status messages
+        language_prompt_fn: Optional callable () -> str that returns a tesseract language
+            code (e.g. "eng", "rus"). Called interactively when OCR is needed.
 
     Returns:
         str: Extracted text with section markers
@@ -156,6 +170,11 @@ def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_thr
         if not quiet:
             print(f"⚠️  Only {total_words} words extracted. Attempting OCR on key pages...", file=sys.stderr)
 
+        # Determine OCR language
+        language = "eng"
+        if language_prompt_fn is not None:
+            language = language_prompt_fn() or "eng"
+
         # OCR first 3 + last 2 pages (or all if short doc)
         if num_pages <= 5:
             pages_spec = None
@@ -164,7 +183,7 @@ def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_thr
             last_pages = f"{num_pages-1}-{num_pages}"
             pages_spec = f"{first_pages},{last_pages}"
 
-        ocr_result = run_ocr(pdf_path, pages_spec)
+        ocr_result = run_ocr(pdf_path, pages_spec, language=language)
 
         if ocr_result is True:
             if not quiet:
@@ -176,8 +195,8 @@ def extract_content(pdf_path, min_first_words=450, last_words=150, min_words_thr
             full_text = "\n\n".join(page_texts)
             words = split_into_words(full_text)
             total_words = len(words)
-        elif not quiet:
-            print(f"⚠️  {ocr_result}", file=sys.stderr)
+        else:
+            return f"Error: {ocr_result}"
 
     # Determine beginning section: max(first page, min_first_words)
     first_page_text = page_texts[0] if page_texts else ""

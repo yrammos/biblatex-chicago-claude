@@ -18,6 +18,9 @@ ref_file: "./biblatex-chicago-notes-ref.md"  # Optional: condensed biblatex-chic
 ocr_threshold: 50 # Minimum characters to consider a page as having text
 max_tokens: 4000 # Maximum tokens for Claude response
 model: "claude-sonnet-4-20250514" # Claude model to use
+default_ocr_language: "eng"  # Tesseract language code used in quiet/automation mode (eng, rus, deu, fra, etc.)
 
 # Logging
 verbose: true
+notify_progress: false  # Send macOS notifications for batch progress (useful when running via Quick Action)
+show_window: false  # Show floating progress window (overridden by --window / --no-window flags)
