@@ -1,0 +1,22 @@
+# Configuration for Bibliographic Extractor
+# Copy this file to config.yaml and edit with your settings:
+#   cp config.yaml.example config.yaml
+
+# Your Anthropic API key
+# Get one at: https://console.anthropic.com/settings/keys
+anthropic_api_key: "sk-ant-api03-REPLACE_WITH_YOUR_KEY"
+
+# Paths
+pdf_in_folder: "./pdf-in" # Incoming PDFs to process
+pdf_out_folder: "./pdf-out" # Processed PDFs moved here
+main_bib_file: "~/Desktop/biblio-staging.bib"
+template_file: "./biblio-template.bib"
+claude_md_file: "./CLAUDE.md"
+
+# Processing options
+ocr_threshold: 50 # Minimum characters to consider a page as having text
+max_tokens: 4000 # Maximum tokens for Claude response
+model: "claude-sonnet-4-20250514" # Claude model to use
+
+# Logging
+verbose: true

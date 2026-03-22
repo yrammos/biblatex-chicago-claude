@@ -1,0 +1,9 @@
+# Local configuration (contains API key)
+config.yaml
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
