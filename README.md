@@ -20,10 +20,10 @@ Using alternative styles (e.g., APA) involves only minor modifications to the pr
 4. Sends the extracted text to the Claude API with project guidelines and a reference template.
 5. Returns a properly formatted BibLaTeX-Chicago entry.
 6. Validates brace balance before saving.
-7. Appends the entry — with a BibDesk `bdsk-file-1` bookmark — to a staging file (`~/Desktop/biblio-staging.bib`).
+7. Saves the entry — with a BibDesk `bdsk-file-1` bookmark — either directly into BibDesk (if `autofile_bibdesk` is enabled) or to a staging file (`~/Desktop/biblio-staging.bib`).
 8. On validation failure, saves the raw entry to `~/Desktop/biblio-failed.bib` and sends a macOS notification.
 
-The staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
+With `autofile_bibdesk` disabled, the staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
 
 ## Setup
 
@@ -135,7 +135,9 @@ ostracon-ai/
 
 ## BibDesk Integration
 
-The tool writes to `~/Desktop/biblio-staging.bib` rather than directly to your main BibDesk database, because BibDesk does not detect external file modifications. Import the staging file into BibDesk manually whenever you want to merge new entries. Each entry includes a `bdsk-file-1` field with a macOS file bookmark, so PDF links will be resolved correctly after import.
+By default the tool writes to `~/Desktop/biblio-staging.bib`, which you import into BibDesk manually. Each entry includes a `bdsk-file-1` bookmark so PDF links resolve correctly after import.
+
+Set `autofile_bibdesk: true` in `config.yaml` to skip the staging file entirely. The tool will import each entry directly into BibDesk via AppleScript (opening the staging file in BibDesk if it is not already open) and immediately trigger BibDesk's auto-file to move the PDF to your papers folder.
 
 ## Troubleshooting
 
