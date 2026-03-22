@@ -21,6 +21,9 @@ This repository contains academic PDF publications. The task is to extract bibli
   - devonthink
   - URL (in @article, @book, @collection, @incollection, @inbook types)
 - Use a single hyphen (`-`) for page ranges, date ranges, and any other ranges.
+- In the date field only the four-digit year, unless the item is:
+  - @unpublished
+  - @article with `entrysubtype={magazine}`.
 - If the main language of the publication is English, the following fields should appear in title case (according to Chicago Manual of Style sense of "title case"):
   - Title
   - Journaltitle
