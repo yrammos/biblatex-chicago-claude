@@ -73,7 +73,7 @@ Copy your existing CLAUDE.md file to this directory
 Run: `pip install -r requirements.txt`
 
 **"ocrmypdf not installed"**
-Only needed for scanned PDFs. Run: `brew install ocrmypdf`
+Only needed for scanned PDFs. Run: `brew install ocrmypdf`. When a scanned PDF is detected, a language selection dialog will appear — choose the document's language. Set `default_ocr_language` in `config.yaml` (e.g. `rus`, `deu`) for unattended use.
 
 ## What's in Each File?
 

@@ -149,7 +149,7 @@ Make sure `pyobjc-framework-Cocoa` is installed in the Python environment used b
 Run `python3 install_service.py` and check System Settings → General → Login Items & Extensions to confirm the action is enabled.
 
 **OCR not working**
-Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extraction if OCR is unavailable.
+Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extraction if OCR is unavailable. When a scanned PDF is detected, a language selection dialog will appear — pick the language of the document so Tesseract uses the correct model. In quiet/automation mode, the language defaults to `eng`; set `default_ocr_language` in `config.yaml` to override (e.g. `rus`, `deu`, `fra`).
 
 ## Cost Estimate
 
