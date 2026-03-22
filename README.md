@@ -4,11 +4,11 @@ A Claude-powered macOS tool for extracting bibliographic information from academ
 
 ## Rationale
 
-Chicago is the venerable bibliography style typically used in the humanities, celebrated for its attention to genetic information, various types of authorship, and detail in general. The notes-and-bibliography variant, in particular, relies on footnotes or endnotes, rather than inline references, and more common in music theory and musicology.
+Chicago is the venerable bibliography style typically used in the humanities, celebrated for its attention to genetic information, various types of authorship, and detail in general. The notes-and-bibliography variant, in particular, relies on footnotes or endnotes rather than inline references, and is more common in music theory and musicology.
 
-Given the immense number of types and fields available in BibLaTeX-Chicago, Zotero is hardly a viable bibliography manager for users of the style. On macOS, BibDesk is the only bibliography manager that elegantly negotiates this ontological complexity. Other writers avoid bibliography managers altogether and prefer to directly edit .bib files using a text editor.
+Given the immense number of types and fields available in BibLaTeX-Chicago, Zotero is hardly a viable bibliography manager for users of the style. On macOS, BibDesk is the only bibliography manager that elegantly negotiates this ontological complexity. Other writers avoid bibliography managers altogether and prefer to edit `.bib` files directly using a text editor.
 
-In either case, this tool aims to enhance BibDesk-based workflows with Zotero-like auto-fill capabilities for new bibliography entries. Thanks to its reliance on AI, which is prompted with a mini-corpus of example bibliographic entries and a summary of the BibLaTeX-Chicago's specifications, this tool should not just match but actually outperform Zotero's auto-fill performance in most cases.
+In either case, this tool aims to enhance BibDesk-based workflows with Zotero-like auto-fill capabilities for new bibliography entries. Thanks to its reliance on AI, which is prompted with a mini-corpus of example bibliographic entries and a summary of BibLaTeX-Chicago’s specifications, this tool should not just match but actually outperform Zotero’s auto-fill performance in most cases.
 
 Using alternative styles (e.g., APA) involves only minor modifications to the prompts and context; it is left as a trivial exercise for the reader.
 
