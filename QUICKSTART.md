@@ -14,9 +14,9 @@ brew install ocrmypdf
 
 ## Step 2: Get API Key
 
-1. Visit https://console.anthropic.com/settings/keys
-2. Create a new API key
-3. Copy it (starts with `sk-ant-`)
+1. Visit https://console.anthropic.com/settings/keys.
+2. Create a new API key.
+3. Copy it (starts with `sk-ant-`).
 
 ## Step 3: Configure
 
@@ -28,10 +28,10 @@ anthropic_api_key: "sk-ant-api03-xxxxxxxxxxxxx"
 
 ## Step 4: Add Your Files
 
-1. Copy your `CLAUDE.md` to this directory
-2. Copy your `biblio-template.bib` to this directory
-3. Create a `pdf/` folder: `mkdir pdf`
-4. Put a test PDF in the `pdf/` folder
+1. Copy your `CLAUDE.md` to this directory.
+2. Copy your `biblio-template.bib` to this directory.
+3. Create a `pdf/` folder: `mkdir pdf`.
+4. Put a test PDF in the `pdf/` folder.
 
 ## Step 5: Test Setup
 
@@ -48,9 +48,9 @@ python biblio_agent.py pdf/your-test-file.pdf
 ```
 
 You should see:
-- Processing messages
-- The extracted BibLaTeX entry printed to console
-- Entry appended to the file set in `main_bib_file` (your `config.yaml`)
+- Processing messages.
+- The extracted BibLaTeX entry printed to console.
+- Entry appended to the file set in `main_bib_file` (your `config.yaml`).
 
 ## Step 7: Review the Output
 
@@ -75,19 +75,19 @@ Open the file set in `main_bib_file` and check:
 
 ## What's in Each File?
 
-- **biblio_agent.py** - Main program (orchestrates everything)
-- **extract_pages.py** - PDF text extraction (with OCR)
-- **config.yaml** - Your settings (API key, paths)
-- **test_setup.py** - Verifies your setup
-- **requirements.txt** - Python packages needed
+- **biblio_agent.py** - Main program (orchestrates everything).
+- **extract_pages.py** - PDF text extraction (with OCR).
+- **config.yaml** - Your settings (API key, paths).
+- **test_setup.py** - Verifies your setup.
+- **requirements.txt** - Python packages needed.
 
 ## Next Steps
 
 Once you've successfully processed one PDF:
 
-1. Try a few more PDFs to verify quality
-2. Check if the bibliographic entries are accurate
-3. Adjust `CLAUDE.md` if needed to improve extraction
+1. Try a few more PDFs to verify quality.
+2. Check if the bibliographic entries are accurate.
+3. Adjust `CLAUDE.md` if needed to improve extraction.
 4. Let me know if you want batch processing or folder watching!
 
 ## Cost Per PDF

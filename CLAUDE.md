@@ -8,24 +8,24 @@ This repository contains academic PDF publications. The task is to extract bibli
 
 ## Bibliographic Extraction Guidelines
 
-- Look for PDFs in the `/.pdf` folder
-- **Read only** the beginning (max of first page or ~450 words) and last ~150 words of each PDF for bibliographic data
+- Look for PDFs in the `/.pdf` folder.
+- **Read only** the beginning (max of first page or ~450 words) and last ~150 words of each PDF for bibliographic data.
 - IMPORTANT: Use `biblio-template.bib` as reference for publication types and fields. Try to use the types and fields in this template.
-- Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields
+- Select the appropriate entry type (@Book, @Article, etc.) and populate relevant fields.
 - Do not populate the following fields:
-  - ISSN
-  - ISBN
-  - keywords
-  - reference
-  - devonthink
+  - ISSN.
+  - ISBN.
+  - keywords.
+  - reference.
+  - devonthink.
   - URL (in @article, @book, @collection, @incollection, @inbook types).
-- Use a single hyphen (`-`) for page ranges, date ranges, and any other ranges
+- Use a single hyphen (`-`) for page ranges, date ranges, and any other ranges.
 - If the main language of the publication is English, the following fields should appear in title case (according to Chicago Manual of Style sense of "title case"):
-  - Title
-  - Journaltitle
-  - Booktitle
-  - Issuetitle
-  - Publisher
+  - Title.
+  - Journaltitle.
+  - Booktitle.
+  - Issuetitle.
+  - Publisher.
 - If the language of the publication is Russian or French, use title case.
 - If the language of the publication is German, use German title case.
 - Do not use all caps, unless it is a single, individual word in the title.
@@ -38,11 +38,11 @@ This repository contains academic PDF publications. The task is to extract bibli
 
 ## Reference Documentation
 
-- biblatex-chicago package: https://ctan.org/tex-archive/macros/latex/contrib/biblatex-contrib/biblatex-chicago
-- Types and fields reference: https://mirrors.ctan.org/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/biblatex-chicago.pdf
-- Examples: https://mirror.init7.net/ctan/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/cms-notes-intro.pdf
+- biblatex-chicago package: https://ctan.org/tex-archive/macros/latex/contrib/biblatex-contrib/biblatex-chicago.
+- Types and fields reference: https://mirrors.ctan.org/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/biblatex-chicago.pdf.
+- Examples: https://mirror.init7.net/ctan/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/cms-notes-intro.pdf.
 
 ## Important Notes
 
-- Use biblatex-chicago specific types and fields, not generic BibLaTeX
-- The Chicago style variant is "notes and bibliography", not "author-date"
+- Use biblatex-chicago specific types and fields, not generic BibLaTeX.
+- The Chicago style variant is "notes and bibliography", not "author-date".

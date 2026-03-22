@@ -4,14 +4,14 @@ A Claude-powered macOS tool for extracting bibliographic information from academ
 
 ## What It Does
 
-1. Takes one or more PDF files as input
-2. Extracts text from the first page (~450 words) and last ~150 words
-3. Automatically runs OCR if the PDF appears to be scanned
-4. Sends the extracted text to the Claude API with project guidelines and a reference template
-5. Returns a properly formatted BibLaTeX-Chicago entry
-6. Validates brace balance before saving
-7. Appends the entry — with a BibDesk `bdsk-file-1` bookmark — to a staging file (`~/Desktop/biblio-staging.bib`)
-8. On validation failure, saves the raw entry to `~/Desktop/biblio-failed.bib` and sends a macOS notification
+1. Takes one or more PDF files as input.
+2. Extracts text from the first page (~450 words) and last ~150 words.
+3. Automatically runs OCR if the PDF appears to be scanned.
+4. Sends the extracted text to the Claude API with project guidelines and a reference template.
+5. Returns a properly formatted BibLaTeX-Chicago entry.
+6. Validates brace balance before saving.
+7. Appends the entry — with a BibDesk `bdsk-file-1` bookmark — to a staging file (`~/Desktop/biblio-staging.bib`).
+8. On validation failure, saves the raw entry to `~/Desktop/biblio-failed.bib` and sends a macOS notification.
 
 The staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
 
@@ -33,10 +33,10 @@ pip install -r requirements.txt
 ```
 
 `requirements.txt` includes:
-- `anthropic` — Claude API client
-- `pypdf` — PDF text extraction
-- `pyyaml` — configuration
-- `pyobjc-framework-Cocoa` — macOS file bookmarks for BibDesk integration
+- `anthropic` — Claude API client.
+- `pypdf` — PDF text extraction.
+- `pyyaml` — configuration.
+- `pyobjc-framework-Cocoa` — macOS file bookmarks for BibDesk integration.
 
 ### 3. Configure
 
@@ -53,9 +53,9 @@ The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_
 
 Edit `CLAUDE.md` to match your bibliographic conventions. At minimum, review:
 
-- The output format and field exclusions (e.g. which fields to omit)
-- Title-case rules for any languages you work with
-- Any domain-specific entry types or fields you rely on
+- The output format and field exclusions (e.g. which fields to omit).
+- Title-case rules for any languages you work with.
+- Any domain-specific entry types or fields you rely on.
 
 The richer and more specific your `CLAUDE.md`, the more accurately Claude will format entries to your standards.
 
@@ -142,7 +142,7 @@ Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extracti
 ## Cost Estimate
 
 Using Claude Sonnet:
-- ~$0.02 per PDF
+- ~$0.02 per PDF.
 
 ## License
 
