@@ -156,19 +156,19 @@ Set `autofile_bibdesk: true` in `config.yaml` to skip the staging file entirely.
 
 ## Troubleshooting
 
-**Entry saved to `failed_bib_file` instead of staging file**
+**Entry saved to `failed_bib_file` instead of staging file.**
 
 The generated entry had unbalanced braces. Open the failed file, fix the entry manually, and add it to the staging file.
 
-**`bdsk-file-1` bookmark not working after import**
+**`bdsk-file-1` bookmark not working after import.**
 
 Make sure `pyobjc-framework-Cocoa` is installed in the Python environment used by the Quick Action (check the `PYTHON` path in `automator/script.sh`).
 
-**Quick Action not appearing in Finder**
+**Quick Action not appearing in Finder.**
 
 Run `python3 install_service.py` and check System Settings → General → Login Items & Extensions to confirm the action is enabled.
 
-**OCR not working**
+**OCR not working.**
 
 Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extraction if OCR is unavailable. When a scanned PDF is detected, a language selection dialog will appear — pick the language of the document so Tesseract uses the correct model. In quiet/automation mode, the language defaults to `eng`; set `default_ocr_language` in `config.yaml` to override (e.g. `rus`, `deu`, `fra`).
 
