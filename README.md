@@ -1,6 +1,16 @@
 # bibdesk-claude
 
-A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries (notes and bibliography style). Chicago is the bibliography style typically used in the humanities. In the present implementation, we apply the notes-and-bibliography variant, which is more common in music theory. Using alternative styles (e.g. APA) involves trivial modifications to the prompts and context, and is left as an exercise to the reader.
+A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries (notes and bibliography style).
+
+## Rationale
+
+Chicago is the bibliography style typically used in the humanities. In the current implementation, we use the notes-and-bibliography style, which is more common in music theory and musicology.
+
+Given the immense number of types and fields available in BibLaTeX-Chicago, Zotero is not a viable option. On macOS, BibDesk is the only bibliography manager that elegantly negotiates the intrinsic complexity of the style. Others prefer to use an editor and directly edit .bib files.
+
+In either case, this tool aims to enhance BibDesk-based workflows with Zotero-like auto-fill capabilities for new bibliography entries. Thanks to its reliance on AI prompted with a mini-corpus of bibliographic entries and a summary of the style's specifications, this tool should perform significantly better than Zotero in most cases.
+
+Using alternative styles (e.g., APA) involves only minor modifications to the prompts and context and is left as a trivial exercise for the reader.
 
 ## What It Does
 
