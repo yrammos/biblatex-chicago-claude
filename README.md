@@ -1,175 +1,122 @@
-# Bibliographic Extractor - Minimal Prototype
+# Ostracon AI
 
-A Claude-powered tool for extracting bibliographic information from PDF files and generating BibLaTeX-Chicago entries.
+A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries (notes and bibliography style).
 
-## What This Prototype Does
+## What It Does
 
-1. Takes a PDF file as input
-2. Extracts text from the first 2 pages and last page
-3. Automatically runs OCR if pages appear to be scanned
-4. Sends extracted text to Claude API with your project context
+1. Takes one or more PDF files as input
+2. Extracts text from the first page (~450 words) and last ~150 words
+3. Automatically runs OCR if the PDF appears to be scanned
+4. Sends the extracted text to the Claude API with project guidelines and a reference template
 5. Returns a properly formatted BibLaTeX-Chicago entry
-6. Appends the entry to `biblio-ai.bib`
+6. Validates brace balance before saving
+7. Appends the entry — with a BibDesk `bdsk-file-1` bookmark — to a staging file (`~/Desktop/biblio-staging.bib`)
+8. On validation failure, saves the raw entry to `~/Desktop/biblio-failed.bib` and sends a macOS notification
 
-## Setup Instructions
+The staging file can be periodically imported into BibDesk; PDF links will already be intact thanks to the embedded bookmark.
 
-### 1. Install System Dependencies (macOS)
+## Setup
+
+### 1. Install System Dependencies
 
 ```bash
-# Install OCR tool (optional but recommended for scanned PDFs)
+# OCR support (optional but recommended for scanned PDFs)
 brew install ocrmypdf
 ```
 
-### 2. Install Python Dependencies
+### 2. Create a Python Environment and Install Dependencies
 
 ```bash
-# Create a virtual environment (recommended)
-python3 -m venv venv
-source venv/bin/activate  # On macOS/Linux
-
-# Install required packages
+conda create -n biblio-ai python=3.11   # or use venv
+conda activate biblio-ai
 pip install -r requirements.txt
 ```
 
-### 3. Get Your Anthropic API Key
+`requirements.txt` includes:
+- `anthropic` — Claude API client
+- `pypdf` — PDF text extraction
+- `pyyaml` — configuration
+- `pyobjc-framework-Cocoa` — macOS file bookmarks for BibDesk integration
 
-1. Go to https://console.anthropic.com/settings/keys
-2. Create a new API key
-3. Copy the key (starts with `sk-ant-`)
+### 3. Configure
 
-### 4. Configure the Tool
-
-Edit `config.yaml` and add your API key:
+Edit `config.yaml`:
 
 ```yaml
-anthropic_api_key: "sk-ant-api03-your-actual-key-here"
+anthropic_api_key: "sk-ant-..."          # your Anthropic API key
+main_bib_file: "~/Desktop/biblio-staging.bib"  # staging output
 ```
 
-You can also customize other settings like paths and model selection.
-
-### 5. Add Your Project Files
-
-Place these files in the same directory:
-- `CLAUDE.md` - Your project guidelines
-- `biblio-template.bib` - Your reference template
-
-Create a `pdf/` folder for your PDF files:
-```bash
-mkdir pdf
-```
+The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left as-is or adjusted to your setup.
 
 ## Usage
 
-### Process a Single PDF
+### macOS Quick Action (recommended)
+
+Right-click any PDF (or selection of PDFs) in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. The entry is appended to the staging file and copied to the clipboard.
+
+To install or reinstall the Quick Action after changes to `automator/script.sh`:
 
 ```bash
+python3 install_service.py
+```
+
+### Command Line
+
+```bash
+# Process one or more PDFs
 python biblio_agent.py path/to/paper.pdf
-```
 
-This will:
-- Extract bibliographic info
-- Print the BibLaTeX entry to console
-- Append it to `biblio-ai.bib`
-
-### Process Without Saving
-
-To just see the output without saving:
-
-```bash
+# Process without saving (print to stdout only)
 python biblio_agent.py path/to/paper.pdf --no-save
-```
 
-### Use Custom Config File
+# Process all PDFs in pdf-in/ and move them to pdf-out/
+python biblio_agent.py --all
 
-```bash
-python biblio_agent.py path/to/paper.pdf --config my-config.yaml
-```
-
-### Specify Custom Output File
-
-```bash
-python biblio_agent.py path/to/paper.pdf --output my-bibliography.bib
-```
-
-## Example Workflow
-
-```bash
-# 1. Activate virtual environment
-source venv/bin/activate
-
-# 2. Process a PDF
-python biblio_agent.py pdf/smith2023.pdf
-
-# Output:
-# 📄 Processing: smith2023.pdf
-#    Extracting text...
-#    Sending to Claude...
-#    ✓ Complete
-#    ✓ Saved to ./biblio-ai.bib
-#
-# @Article{Smith2023,
-#   author = {Smith, John},
-#   title = {A Study of Something Important},
-#   ...
-# }
+# Write to a custom output file
+python biblio_agent.py path/to/paper.pdf --output custom.bib
 ```
 
 ## File Structure
 
 ```
-biblio-extractor/
+ostracon-ai/
 ├── biblio_agent.py       # Main orchestrator
-├── extract_pages.py      # PDF text extraction
-├── config.yaml           # Your configuration
+├── extract_pages.py      # PDF text extraction with OCR fallback
+├── install_service.py    # Builds and installs the macOS Quick Action
+├── config.yaml           # Configuration (API key, paths, model)
 ├── requirements.txt      # Python dependencies
-├── CLAUDE.md             # Project guidelines
-├── biblio-template.bib   # Reference template
-├── biblio-ai.bib         # Generated bibliography (created automatically)
-└── pdf/                  # Your PDF files
+├── CLAUDE.md             # Bibliographic extraction guidelines for Claude
+├── biblio-template.bib   # Reference template for BibLaTeX-Chicago types/fields
+├── automator/
+│   └── script.sh         # Shell script embedded in the Quick Action
+├── pdf-in/               # Drop PDFs here for batch processing (--all)
+└── pdf-out/              # Processed PDFs are moved here
 ```
+
+## BibDesk Integration
+
+The tool writes to `~/Desktop/biblio-staging.bib` rather than directly to your main BibDesk database, because BibDesk does not detect external file modifications. Import the staging file into BibDesk manually whenever you want to merge new entries. Each entry includes a `bdsk-file-1` field with a macOS file bookmark, so PDF links will be resolved correctly after import.
 
 ## Troubleshooting
 
-### "anthropic_api_key not found"
-- Make sure you've edited `config.yaml` with your actual API key
-- The key should start with `sk-ant-`
+**Entry saved to `~/Desktop/biblio-failed.bib` instead of staging file**
+The generated entry had unbalanced braces. Open the failed file, fix the entry manually, and add it to the staging file.
 
-### "ocrmypdf not installed"
-- This is only needed for scanned PDFs
-- Install with: `brew install ocrmypdf`
-- Or the tool will skip OCR and work with text-based PDFs only
+**`bdsk-file-1` bookmark not working after import**
+Make sure `pyobjc-framework-Cocoa` is installed in the Python environment used by the Quick Action (check the `PYTHON` path in `automator/script.sh`).
 
-### "Could not read PDF"
-- Make sure the PDF isn't corrupted
-- Try opening it in Preview/Adobe Reader first
-- Some encrypted PDFs may not work
+**Quick Action not appearing in Finder**
+Run `python3 install_service.py` and check System Settings → General → Login Items & Extensions to confirm the action is enabled.
 
-### Poor extraction quality
-- Check that your `CLAUDE.md` file has clear guidelines
-- Make sure `biblio-template.bib` shows good examples
-- The first 2 + last page might not always have all info
-- Consider manually checking/editing the output
-
-## What's Next?
-
-This is the minimal prototype. Once you verify it works well with your PDFs, we can add:
-
-1. **Batch processing** - Process entire folders
-2. **Folder watching** - Auto-process new PDFs
-3. **Deduplication** - Track already-processed files
-4. **Error recovery** - Retry failed extractions
-5. **Quality checks** - Validate BibLaTeX syntax
-6. **Interactive mode** - Review entries before saving
+**OCR not working**
+Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extraction if OCR is unavailable.
 
 ## Cost Estimate
 
-With Claude Sonnet 4:
-- ~$0.003 per PDF (input tokens)
-- ~$0.015 per PDF (output tokens)
-- **~$0.02 per PDF total**
-
-For 5000 PDFs: approximately $100 total
+Using Claude Sonnet:
+- ~$0.02 per PDF
 
 ## License
 
-This is a custom tool for personal use.
+Personal use.
