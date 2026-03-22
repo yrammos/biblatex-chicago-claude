@@ -2,6 +2,17 @@
 
 A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries in notes-and-bibliography style.
 
+## Quick start
+
+```bash
+brew install ocrmypdf                   # OCR support (optional)
+pip install -r requirements.txt         # Python dependencies
+cp automator/script.sh.example automator/script.sh  # then edit PYTHON and WORKDIR within that file
+python3 install_service.py              # install the Finder quick action (optional, recommended)
+```
+
+Set `anthropic_api_key` in `config.yaml`, then right-click any PDF in Finder and choose **Extract BibLaTeX-Chicago Bibliography (via Claude)**. See [Setup](#setup) for full configuration details.
+
 ## Rationale
 
 [Chicago](https://www.chicagomanualofstyle.org/tools_citationguide/citation-guide-1.html) is the venerable bibliography style typically used in the humanities, celebrated for its attention to source and transmission history, various types of authorship, and detail in general. The notes-and-bibliography variant, in particular, relies on footnotes or endnotes rather than inline references, and is the more common one in music theory and musicology.
