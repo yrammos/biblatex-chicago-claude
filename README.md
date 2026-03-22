@@ -4,7 +4,7 @@ A Claude-powered macOS tool for extracting bibliographic information from academ
 
 ## Rationale
 
-[Chicago](https://www.chicagomanualofstyle.org/tools_citationguide/citation-guide-1.html) is the venerable bibliography style typically used in the humanities, celebrated for its attention to genetic information, various types of authorship, and detail in general. The notes-and-bibliography variant, in particular, relies on footnotes or endnotes rather than inline references, and is more common in music theory and musicology.
+[Chicago](https://www.chicagomanualofstyle.org/tools_citationguide/citation-guide-1.html) is the venerable bibliography style typically used in the humanities, celebrated for its attention to genetic information, various types of authorship, and detail in general. The notes-and-bibliography variant, in particular, relies on footnotes or endnotes rather than inline references, and is the more common one in music theory and musicology.
 
 Given the immense number of types and fields stipulated in the [BibLaTeX-Chicago](https://ch.mirrors.cicku.me/ctan/macros/latex/contrib/biblatex-contrib/biblatex-chicago/doc/biblatex-chicago.pdf) package, Zotero is hardly a viable bibliography manager for users of the style. On macOS, BibDesk is the only bibliography manager that elegantly negotiates this ontological complexity. Other writers avoid bibliography managers altogether and prefer to edit `.bib` files directly using a text editor.
 
