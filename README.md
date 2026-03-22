@@ -1,4 +1,4 @@
-# BibLaTeX-Chicago-Claude
+# BibLaTeX-Chicago-Claude (a.k.a. “Ostracon”)
 
 A Claude-powered macOS tool for extracting bibliographic information from academic PDF files and generating BibLaTeX-Chicago entries in notes-and-bibliography style.
 
@@ -140,7 +140,7 @@ ostracon-ai/
 
 By default the tool writes to the file set in `main_bib_file` (`config.yaml`), which you import into BibDesk manually. Each entry includes a `bdsk-file-1` bookmark so PDF links resolve correctly after import.
 
-Set `autofile_bibdesk: true` in `config.yaml` to skip the staging file entirely. The tool will import each entry directly into BibDesk via AppleScript (opening the staging file in BibDesk if it is not already open) and immediately trigger BibDesk's auto-file to move the PDF to your papers folder.
+Set `autofile_bibdesk: true` in `config.yaml` to skip the staging file entirely. The tool will import each entry directly into BibDesk via AppleScript (opening the staging file in BibDesk if it is not already open) and immediately trigger BibDesk’s auto-file to move the PDF to your papers folder.
 
 ## Troubleshooting
 
@@ -160,8 +160,12 @@ Install `ocrmypdf` via Homebrew. The tool will fall back to direct text extracti
 
 Using Claude Sonnet:
 
-- ~$0.02 per PDF.
+- ~$0.02–$0.03 per PDF.
+
+## What does “Ostracon” mean?
+
+> An ostracon (Greek: ὄστρακον ostrakon, plural ὄστρακα ostraka) is a piece of pottery (or stone), usually broken off from a vase or other earthenware vessel. In archaeology, ostraca may contain scratched-in words or other forms of writing which may give clues as to the time when the piece was in use.
 
 ## License
 
-Personal use.
+Copyright (c) 2026 [yrammos](https://github.com/yrammos). Licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Free for personal use; attribution required for forks and modifications; commercial use prohibited.

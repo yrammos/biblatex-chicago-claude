@@ -63,19 +63,19 @@ Open the file set in `main_bib_file` and check:
 
 ## Troubleshooting quick fixes
 
-**"anthropic_api_key not found"**
+**“anthropic_api_key not found”**
 Edit config.yaml with your real API key
 
-**"CLAUDE.md not found"**
+**“CLAUDE.md not found”**
 Copy your existing CLAUDE.md file to this directory
 
-**"No module named 'anthropic'"**
+**“No module named ‘anthropic’”**
 Run: `pip install -r requirements.txt`
 
-**"ocrmypdf not installed"**
-Only needed for scanned PDFs. Run: `brew install ocrmypdf`. When a scanned PDF is detected, a language selection dialog will appear — choose the document's language. Set `default_ocr_language` in `config.yaml` (e.g. `rus`, `deu`) for unattended use.
+**“ocrmypdf not installed”**
+Only needed for scanned PDFs. Run: `brew install ocrmypdf`. When a scanned PDF is detected, a language selection dialog will appear — choose the document’s language. Set `default_ocr_language` in `config.yaml` (e.g. `rus`, `deu`) for unattended use.
 
-## What's in each file?
+## What’s in each file?
 
 - **biblio_agent.py** - Main program (orchestrates everything).
 - **extract_pages.py** - PDF text extraction (with OCR).
@@ -85,7 +85,7 @@ Only needed for scanned PDFs. Run: `brew install ocrmypdf`. When a scanned PDF i
 
 ## Next steps
 
-Once you've successfully processed one PDF:
+Once you’ve successfully processed one PDF:
 
 1. Try a few more PDFs to verify quality.
 2. Check if the bibliographic entries are accurate.
