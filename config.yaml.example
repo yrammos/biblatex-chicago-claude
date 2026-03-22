@@ -23,7 +23,7 @@ default_ocr_language: "eng"  # Tesseract language code used in quiet/automation 
 
 # Logging
 verbose: true
-notify_progress: false  # Send macOS notifications for batch progress (useful when running via Quick Action)
+notifications: false  # Send macOS notifications (batch progress updates and validation failures)
 show_window: false  # Show floating progress window (overridden by --window / --no-window flags)
 
 # BibDesk integration

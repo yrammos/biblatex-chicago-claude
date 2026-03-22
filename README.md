@@ -75,6 +75,8 @@ failed_bib_file: "~/Desktop/biblio-failed.bib" # validation failures
 
 The other paths (`pdf_in_folder`, `pdf_out_folder`, `template_file`, `claude_md_file`) can be left untouched or adjusted to your setup. The optional `ref_file` key (set to `biblatex-chicago-notes-ref.md` by default) loads a condensed biblatex-chicago field reference into the Claude prompt to improve extraction quality; remove or comment it out to omit it.
 
+Set `notifications: true` to enable macOS notifications. When enabled, the tool sends notifications for batch progress updates and validation failures. Defaults to `false`.
+
 ### 4. Customize the extraction prompt
 
 Edit `CLAUDE.md` to match your bibliographic conventions. At minimum, review:
