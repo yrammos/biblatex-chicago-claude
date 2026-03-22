@@ -7,6 +7,7 @@ Processes PDFs and generates BibLaTeX-Chicago entries.
 import sys
 import argparse
 import shutil
+import subprocess
 from pathlib import Path
 from datetime import datetime
 import yaml
@@ -181,22 +182,117 @@ Output ONLY the BibLaTeX entry, with no additional commentary or explanation."""
             entry = "\n".join(lines)
         return entry.strip()
 
-    def save_entry(self, bibtex_entry, pdf_name):
-        """Append BibLaTeX entry to output file."""
-        output_path = Path(self.config['output_file'])
+    def validate_braces(self, entry):
+        """Check that all braces in the entry are balanced."""
+        depth = 0
+        for char in entry:
+            if char == '{':
+                depth += 1
+            elif char == '}':
+                depth -= 1
+                if depth < 0:
+                    return False, "unmatched closing brace"
+        if depth != 0:
+            return False, f"unclosed braces (depth={depth})"
+        return True, ""
 
-        # Create file if it doesn't exist
+    def add_bdsk_bookmark(self, entry, pdf_path):
+        """Inject a bdsk-file-1 field with a macOS file bookmark into the entry."""
+        try:
+            from Foundation import NSURL
+            import base64
+            import os
+            import plistlib
+
+            pdf_path = Path(pdf_path).resolve()
+            url = NSURL.fileURLWithPath_(str(pdf_path))
+            NSURLBookmarkCreationSuitableForBookmarkFile = 1 << 10
+            bookmark_data, error = url.bookmarkDataWithOptions_includingResourceValuesForKeys_relativeToURL_error_(
+                NSURLBookmarkCreationSuitableForBookmarkFile, None, None, None
+            )
+            if error or bookmark_data is None:
+                if self.config.get('verbose'):
+                    print(f"   ⚠️  Could not create bookmark: {error}", file=sys.stderr)
+                return entry
+
+            bib_dir = Path(self.config['main_bib_file']).expanduser().parent
+            rel_path = os.path.relpath(str(pdf_path), str(bib_dir))
+
+            plist_bytes = plistlib.dumps(
+                {'relativePath': rel_path, 'bookmark': bytes(bookmark_data)},
+                fmt=plistlib.FMT_BINARY
+            )
+            b64 = base64.b64encode(plist_bytes).decode('ascii')
+
+            # Insert bdsk-file-1 before the entry's closing brace.
+            # The entry ends with the closing } on its own line.
+            lines = entry.rstrip().split('\n')
+            if lines[-1].strip() == '}':
+                last_field = lines[-2].rstrip()
+                if not last_field.endswith(','):
+                    lines[-2] = last_field + ','
+                lines.insert(-1, f'  bdsk-file-1 = {{{b64}}}')
+            return '\n'.join(lines)
+
+        except ImportError:
+            if self.config.get('verbose'):
+                print("   ⚠️  pyobjc not available, skipping bdsk-file-1", file=sys.stderr)
+            return entry
+
+    def notify_failure(self, pdf_name, error_msg):
+        """Send a macOS notification about a validation failure."""
+        msg = f"Brace validation failed for {pdf_name}: {error_msg}. Entry saved to ~/Desktop/biblio-failed.bib."
+        subprocess.run(
+            ['osascript', '-e',
+             f'display notification "{msg}" with title "Ostracon AI" subtitle "Validation Failed" sound name "Basso"'],
+            capture_output=True
+        )
+
+    def save_failure(self, entry, pdf_name, error_msg):
+        """Append a failed entry with an error note to ~/Desktop/biblio-failed.bib."""
+        failed_path = Path.home() / 'Desktop' / 'biblio-failed.bib'
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        with open(failed_path, 'a') as f:
+            f.write(f"% FAILED: {timestamp}\n")
+            f.write(f"% Source: {pdf_name}\n")
+            f.write(f"% Error: {error_msg}\n")
+            f.write(entry)
+            f.write("\n\n")
+        if self.config.get('verbose'):
+            print(f"   ✗ Failed entry saved to {failed_path}", file=sys.stderr)
+
+    def save_entry(self, bibtex_entry, pdf_path):
+        """Validate, enrich with a BibDesk bookmark, and append to the main bib file."""
+        pdf_path = Path(pdf_path)
+        entry = self.clean_bibtex(bibtex_entry)
+
+        # Validate brace balance before touching the main file
+        valid, error_msg = self.validate_braces(entry)
+        if not valid:
+            self.save_failure(entry, pdf_path.name, error_msg)
+            self.notify_failure(pdf_path.name, error_msg)
+            return False
+
+        # Attach a BibDesk file bookmark
+        entry = self.add_bdsk_bookmark(entry, pdf_path)
+
+        output_path = Path(self.config['main_bib_file']).expanduser()
         if not output_path.exists():
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.touch()
 
-        # Append entry
-        with open(output_path, 'a') as f:
-            f.write(self.clean_bibtex(bibtex_entry))
-            f.write("\n\n")
+        content = output_path.read_text(encoding='utf-8')
+        marker = '@comment{BibDesk Static Groups{'
+        marker_pos = content.find(marker)
+        if marker_pos != -1:
+            content = content[:marker_pos] + entry + "\n\n" + content[marker_pos:]
+        else:
+            content = content + entry + "\n\n"
+        output_path.write_text(content, encoding='utf-8')
 
         if self.config.get('verbose'):
             print(f"   ✓ Saved to {output_path}", file=sys.stderr)
+        return True
 
     def move_to_processed(self, pdf_path):
         """Move a processed PDF to the output folder."""
@@ -261,7 +357,10 @@ Output ONLY the BibLaTeX entry, with no additional commentary or explanation."""
                 continue
 
             # Save entry
-            self.save_entry(bibtex_entry, pdf_path.name)
+            saved = self.save_entry(bibtex_entry, pdf_path)
+            if not saved:
+                results['failed'].append((pdf_path.name, "brace validation failed"))
+                continue
 
             # Move file if requested
             if move_files:
@@ -335,7 +434,7 @@ def main():
 
         # Override config options
         if args.output:
-            agent.config['output_file'] = args.output
+            agent.config['main_bib_file'] = args.output
         if args.quiet:
             agent.config['verbose'] = False
 
@@ -362,7 +461,10 @@ def main():
 
             clean_entry = agent.clean_bibtex(bibtex_entry)
             if not args.no_save:
-                agent.save_entry(bibtex_entry, pdf_path.name)
+                saved = agent.save_entry(bibtex_entry, pdf_path)
+                if not saved:
+                    print(f"Error: failed to save entry for {pdf_path.name}", file=sys.stderr)
+                    sys.exit(1)
             print(clean_entry)
 
     except Exception as e:
