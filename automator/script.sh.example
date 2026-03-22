@@ -1,36 +1,15 @@
- PYTHON="/path/to/your/python"  # e.g. /opt/homebrew/bin/python3 or /path/to/venv/bin/python
- WORKDIR="/path/to/ostracon-ai"  # absolute path to this repository
+PYTHON="/path/to/your/python"  # e.g. /opt/homebrew/bin/python3 or /path/to/venv/bin/python
+WORKDIR="/path/to/ostracon-ai"  # absolute path to this repository
 
- cd "$WORKDIR"
+cd "$WORKDIR"
 
- output=""
- errors=""
- success_count=0
- fail_count=0
+# Pass all selected files in a single invocation so the progress window
+# can display overall progress across the whole batch.
+result=$("$PYTHON" biblio_agent.py --window --no-move "$@" 2>&1)
+exit_code=$?
 
- for f in "$@"; do
-     filename=$(basename "$f")
+if [ $exit_code -ne 0 ] && [ -n "$result" ]; then
+    osascript -e "display alert \"Bibliography Extraction Failed\" message \"${result}\" as critical"
+fi
 
-     # Capture both stdout and stderr
-     result=$("$PYTHON" biblio_agent.py --quiet --no-move "$f" 2>&1)
-     exit_code=$?
-
-     if [ $exit_code -eq 0 ] && [ -n "$result" ]; then
-         output="${output}${result}\n\n"
-         ((success_count++))
-     else
-         errors="${errors}${filename}: ${result}\n"
-         ((fail_count++))
-     fi
- done
-
- # Show error dialog if any failures
- if [ $fail_count -gt 0 ]; then
-     osascript -e "display alert \"Bibliography Extraction Failed\" message
- \"$fail_count file(s) failed:\n\n${errors}\" as critical"
- fi
-
- # Output for clipboard (even if some failed, copy the successful ones)
- if [ -n "$output" ]; then
-     printf '%s' "$output"
- fi
+printf '%s' "$result"
