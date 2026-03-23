@@ -463,7 +463,11 @@ end tell'''
         entry = self.add_bdsk_bookmark(entry, pdf_path)
 
         if self.config.get('autofile_bibdesk', False):
-            bib_path = str(Path(self.config['main_bib_file']).expanduser().resolve())
+            output_path = Path(self.config['main_bib_file']).expanduser()
+            if not output_path.exists():
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_path.touch()
+            bib_path = str(output_path.resolve())
             try:
                 self._save_via_bibdesk(entry, bib_path)
                 return True
