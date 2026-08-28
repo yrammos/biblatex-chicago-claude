@@ -8,6 +8,9 @@ Measures whether an entry is right, rather than just what a run costs
 python3 dev/eval/run.py                       # score dev/eval/sample/ against dev/eval/expected.bib
 python3 dev/eval/run.py --model claude-opus-5  # score with a different model
 python3 dev/eval/test_eval.py                  # exercise the harness itself, no sample/API needed
+
+python3 dev/eval/ablate.py                     # compare the full prefix against each component removed
+python3 dev/eval/test_ablate.py                # exercise the ablation runner, no sample/API needed
 ```
 
 ## How it fits together
@@ -33,6 +36,22 @@ python3 dev/eval/test_eval.py                  # exercise the harness itself, no
   test time, with the extraction step stubbed out. Makes no API call, reads
   no real sample, and needs no `config.yaml` - so it can run (and does run,
   as part of reviewing any change here) with nothing populated yet.
+- [`ablate.py`](ablate.py) - [Issue #7](https://github.com/yrammos/biblatex-chicago-claude/issues/7):
+  scores the sample once with the full prefix and once with each optional
+  prompt-context component removed in turn (`ref_file`, then each
+  `example_files` entry - `notes-test.bib` first, being the largest), and
+  reports a field-level comparison across variants. Reuses `run.py`'s
+  `evaluate()` and `scorer.py` directly rather than re-implementing scoring.
+  Blocked on the sample above being populated - has never been run against
+  real data. Does not implement selective inclusion (classifying the source
+  into a family and loading only that family's examples); the issue's own
+  caveat is to model the resulting cache fragmentation before building it,
+  and that modeling needs this script's baseline as an input.
+- [`test_ablate.py`](test_ablate.py) - the same idea as `test_eval.py`,
+  for `ablate.py`: a synthetic config with a fake `ref_file` and
+  `example_files`, and an injected extraction step whose answer changes
+  with the config, so the comparison table can be checked to actually
+  reflect a simulated accuracy difference between variants.
 
 Re-scoring is meant to be cheap enough to run after any `CLAUDE.md` edit -
 that's the entire point of having this harness rather than an impression.

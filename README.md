@@ -241,6 +241,14 @@ against the physical source, not something this repository can ship pre-filled.
 `dev/eval/test_eval.py` proves the harness itself works, against a synthetic
 fixture pair it builds at run time. See [`dev/eval/README.md`](dev/eval/README.md).
 
+Once the sample is populated, `dev/eval/ablate.py` scores it once with the full
+prefix and once with each optional prompt-context component removed in turn
+(`ref_file`, each `example_files` entry), reporting a field-level comparison
+across variants - whether the ~69k-token prefix earns its size, and if not,
+which part of it doesn't. `dev/eval/test_ablate.py` exercises the same way, with
+a synthetic config and no sample. Neither has been run against real data yet:
+both are blocked on the sample above.
+
 ## Troubleshooting
 
 **Entry saved to `failed_bib_file`.** Unbalanced braces. Repair it by hand and move
@@ -298,7 +306,9 @@ ostracon-ai/
 │   └── eval/               # Accuracy harness; see Evaluating extraction accuracy
 │       ├── run.py                # Scores dev/eval/sample/ against expected.bib
 │       ├── scorer.py             # Field-level comparison
+│       ├── ablate.py             # Prefix-ablation comparison; blocked on the sample
 │       ├── test_eval.py          # Self-test, synthetic fixtures, no API call
+│       ├── test_ablate.py        # Ditto, for ablate.py
 │       ├── expected.bib          # Hand-verified entries; empty until populated
 │       └── sample/
 │           └── manifest.json     # citekey/source/hash list; empty until populated
