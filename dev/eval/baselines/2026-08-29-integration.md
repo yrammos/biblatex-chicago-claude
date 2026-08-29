@@ -6,8 +6,12 @@ what the individual branches could not measure.
 
 ## Provenance
 
-Same sample, same ground truth, same model as the baseline: 61 sources,
-`claude-sonnet-4-6`, no `--model` override. Run from the branch
+Same sample and same model as the baseline: 61 sources, `claude-sonnet-4-6`, no
+`--model` override. **Not the same ground truth**: `expected.bib` was corrected in
+`7155812` (2026-08-29 21:04:11 +0200) between the baseline run and this one, and
+this branch contains that correction. Every figure below that compares the two runs
+was obtained by re-scoring both against the corrected file — see the note on the
+field table. Run from the branch
 `integration-2026-08-29`, which merges the six PRs in the order given in their
 bodies. Produced entries written to a scratch directory, so
 `dev/eval/last-run/` still holds the baseline's own output and remains what
@@ -34,12 +38,25 @@ record which fragment the entry describes. No extraction can score them.
 
 ## Field level: the trade this run actually made
 
-| Verdict | Baseline | This run | Delta |
+**These figures are like for like.** `expected.bib` changed twice on 2026-08-29
+(`4dff992`, Menke2004's author; `7155812`, Arndt2014's title and Cavell1969a's
+pages), so the field table published in `2026-08-29.md` was computed against a
+ground truth that no longer exists. The "Baseline" column below is therefore **not**
+that table: it is the baseline run's own saved output, re-scored against
+`expected.bib` as it now stands, so both columns face the same ground truth.
+
+| Verdict | Baseline (re-scored) | This run | Delta |
 |---|---|---|---|
 | exact | 249 | 240 | **−9** |
 | different | 117 | 117 | 0 |
 | missing | 94 | 103 | **+9** |
 | spurious | 83 | 67 | **−16** |
+
+The totals happen to match `2026-08-29.md`'s published figures exactly, which is a
+coincidence and not a reason to trust them: two fields moved in opposite directions.
+`author` goes 33 → 34 (Menke2004, fixed after that table was computed) and `title`
+36 ← 37 (Arndt2014, fixed by `7155812`). Anyone comparing a future run against the
+published table rather than against a re-score will be off by those two.
 
 Read as one sentence: **sixteen fields the pipeline used to invent, it no longer
 invents; nine it used to get right, it now omits.** Nothing moved into
